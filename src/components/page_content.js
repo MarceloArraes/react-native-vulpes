@@ -1,14 +1,16 @@
 import React from 'react';
 import {
   FlatList,
-  ScrollView,
-  View,
+  KeyboardAvoidingView,
+  Platform,
   RefreshControl,
+  ScrollView,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import style from '../styles/content';
-import { H4 } from './typos';
 import { Icon } from './icon';
+import { H4 } from './typos';
 
 export const Page = (props) => (
   <View style={{ ...style.pageContainer, ...props.style }}>
@@ -31,6 +33,31 @@ export const ContentView = ({ noPadding, style: customStyle, ...props }) => {
     </View>
   );
 };
+
+export const ContentKeyboardAvoid = ({
+  noPadding,
+  style: customStyle,
+  ...props
+}) => {
+  let completeStyle = style.contentContainer;
+  let noPaddingStyle = { ...completeStyle, ...style.noPadding };
+
+  let sk = { ...noPaddingStyle, ...props.containerStyle };
+  let ss = { ...completeStyle, marginTop: 0, ...customStyle };
+  if (noPadding) ss = { ...ss, ...style.noPadding };
+
+  return (
+    <KeyboardAvoidingView
+      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      {...props}
+      style={sk}
+    >
+      <ScrollView style={ss}>{props.children}</ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
+
 export const Content = ({ noPadding, style: customStyle, ...props }) => {
   let completeStyle = style.contentContainer;
   if (noPadding) {
@@ -47,9 +74,8 @@ export const Content = ({ noPadding, style: customStyle, ...props }) => {
     );
   };
   completeStyle = { ...completeStyle, ...customStyle };
-  const MainComponent = props.mainComponent || ScrollView;
   return (
-    <MainComponent
+    <ScrollView
       {...props}
       style={completeStyle}
       refreshControl={refreshControl()}
@@ -64,7 +90,7 @@ export const Content = ({ noPadding, style: customStyle, ...props }) => {
         )}
       </View>
       {props.children}
-    </MainComponent>
+    </ScrollView>
   );
 };
 

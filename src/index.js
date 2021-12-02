@@ -29,6 +29,7 @@ import {
   Content,
   ContentList,
   ContentView,
+  ContentKeyboardAvoid,
   Page,
 } from './components/page_content';
 import { PaginationBullets } from './components/pagination_bullets';
@@ -104,6 +105,7 @@ export {
   MiniProfileCard,
   ContentList,
   ContentView,
+  ContentKeyboardAvoid,
   Card,
   CardActions,
   Thumbnail,
