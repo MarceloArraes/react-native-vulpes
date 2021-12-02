@@ -1,6 +1,5 @@
-import { Dimensions } from 'react-native';
 import { Colors } from '../colors';
-const windowHeight = Dimensions.get('window').height;
+import { windowHeight, flexHeight } from './windowHeight';
 
 const styleContent = {
   borderTopLeftRadius: 20,
@@ -26,8 +25,8 @@ export default {
   },
   pageContainer: {
     height: windowHeight,
+    flex: flexHeight,
     flexDirection: 'column',
-    flex: 1,
   },
   dummyView: {
     height: 32,

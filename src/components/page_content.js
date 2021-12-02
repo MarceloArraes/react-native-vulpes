@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   FlatList,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   RefreshControl,
@@ -9,9 +10,9 @@ import {
   View,
 } from 'react-native';
 import style from '../styles/content';
+
 import { Icon } from './icon';
 import { H4 } from './typos';
-
 export const Page = (props) => (
   <View style={{ ...style.pageContainer, ...props.style }}>
     {props.children}
@@ -58,12 +59,26 @@ export const ContentKeyboardAvoid = ({
   );
 };
 
-export const Content = ({ noPadding, style: customStyle, ...props }) => {
+export const Content = ({
+  noPadding,
+  style: customStyle,
+  isBackground,
+  ...props
+}) => {
   let completeStyle = style.contentContainer;
   if (noPadding) {
     completeStyle = {
       ...completeStyle,
       ...style.noPadding,
+    };
+  }
+  if (isBackground) {
+    completeStyle = {
+      ...completeStyle,
+      backgroundColor: 'transparent',
+      paddingLeft: 32,
+      paddingRight: 32,
+      paddingTop: 39,
     };
   }
   let refreshControl = () => {
@@ -129,5 +144,29 @@ export const ContentList = ({ noPadding, style: customStyle, ...props }) => {
     >
       {props.children}
     </FlatList>
+  );
+};
+
+const backgroundImageStyle = {
+  flex: 1,
+  justifyContent: 'center',
+  flexLayout: 'column',
+};
+
+export const BackgroundPage = (props) => {
+  return (
+    <View style={style.pageContainer}>
+      <ImageBackground
+        source={props.image}
+        resizeMode="cover"
+        style={backgroundImageStyle}
+      >
+        {React.Children.toArray(props.children).map((child, i) => {
+          return React.cloneElement(child, {
+            isBackground: true,
+          });
+        })}
+      </ImageBackground>
+    </View>
   );
 };
