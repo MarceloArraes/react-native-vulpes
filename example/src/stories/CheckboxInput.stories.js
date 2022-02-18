@@ -33,12 +33,12 @@ class TemplateCheckboxInput extends Component {
     };
   }
 
-  onChange = (val) => {
+  onChange(val) {
     console.log(val);
     this.setState({
       value: val,
     });
-  };
+  }
 
   render() {
     return (
@@ -56,7 +56,7 @@ class TemplateCheckboxInput extends Component {
 }
 
 const TemplateCheck = (props) => <TemplateCheckboxInput {...props} />;
-export const Example = TemplateCheck.bind({});
+export const Example = TemplateCheck;
 Example.args = {
   error: undefined,
   label: 'Field label',

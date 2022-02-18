@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Keyboard } from 'react-native';
 import { Colors } from '../colors';
 import { RegularBold } from '../components/typos';
 import { Fonts } from '../fonts';
@@ -8,12 +8,36 @@ import { Icon } from './icon';
 
 class Button extends Component {
   renderField() {
-    if (this.props.children) return this.renderChildren();
-    return (
-      <RegularBold color={this.textColor()}>
-        {this.props.text || 'Enviar'}
+    const { children, text, leftIcon, rightIcon } = this.props;
+    if (children) return this.renderChildren();
+
+    const tx = text === undefined ? 'Enviar' : text;
+
+    const t = tx && (
+      <RegularBold key={'t'} color={this.textColor()}>
+        {tx}
       </RegularBold>
     );
+    const l = leftIcon && (
+      <Icon key={'l'} name={leftIcon} color={this.textColor()} />
+    );
+    const r = rightIcon && (
+      <Icon key={'r'} name={rightIcon} color={this.textColor()} />
+    );
+
+    const els = [l, t, r].filter((i) => i);
+
+    return els.map((el, i) => {
+      if (React.isValidElement(el)) {
+        if (i === 0) return el;
+        return React.cloneElement(el, {
+          style: {
+            paddingLeft: 8,
+            ...el.props.style,
+          },
+        });
+      }
+    });
   }
 
   renderChildren() {
@@ -88,12 +112,18 @@ class Button extends Component {
     };
   }
 
+  onPress() {
+    const { onPress } = this.props;
+    Keyboard.dismiss();
+    onPress();
+  }
+
   render() {
-    const { onPress, disabled } = this.props;
+    const { disabled } = this.props;
 
     return (
       <TouchableOpacity
-        onPress={onPress}
+        onPress={this.onPress.bind(this)}
         style={this.buttonStyle()}
         disabled={disabled}
       >

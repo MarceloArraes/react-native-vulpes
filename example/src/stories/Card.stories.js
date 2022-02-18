@@ -26,6 +26,12 @@ export default {
         options: colorList(),
       },
     },
+    noPadding: {
+      description: 'should have zero padding',
+      control: {
+        type: 'boolean',
+      },
+    },
   },
 };
 
@@ -38,7 +44,7 @@ const TemplateGradientView = ({ ...rest }) => {
   );
 };
 
-export const Example = TemplateGradientView.bind({});
+export const Example = TemplateGradientView;
 Example.args = {
   color: 'cyan',
 };

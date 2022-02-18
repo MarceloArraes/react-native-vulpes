@@ -1,52 +1,17 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { View } from 'react-native';
-import { Colors } from '../colors';
+import { TouchableOpacity, View } from 'react-native';
+import {
+  checkedIcon,
+  checkedListItem,
+  listContainer,
+  listItem,
+  listItemText,
+  navIconCont,
+  titleStyle,
+  touchStyle,
+} from '../styles/list';
 import { Icon } from './icon';
-import { Regular, H4 } from './typos';
-
-const listContainer = { marginTop: 8, marginBottom: 16 };
-
-const listItem = {
-  paddingTop: 16,
-  paddingBottom: 16,
-  paddingLeft: 0,
-  paddingRight: 0,
-  borderBottomColor: Colors.light_gray,
-  borderBottomWidth: 1,
-  flexDirection: 'row',
-};
-
-const checkedListItem = {
-  padding: 6,
-  flexDirection: 'row',
-};
-
-const checkedIcon = {
-  marginTop: 5,
-  marginRight: 8,
-};
-const touchStyle = {
-  flexDirection: 'row',
-  flex: 1,
-};
-
-const navIconCont = {
-  alignContent: 'flex-end',
-  alignItems: 'flex-end',
-  justifyContent: 'flex-end',
-  textAlign: 'center',
-  alignSelf: 'center',
-  verticalAlign: 'center',
-  paddingRight: 5,
-};
-
-const titleStyle = {
-  marginBottom: 8,
-};
-const listItemText = {
-  flex: 1,
-};
+import { H4, Regular } from './typos';
 
 const Title = (props) => {
   if (!props.title) return null;

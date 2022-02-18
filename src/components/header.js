@@ -51,19 +51,20 @@ const AdvanceActionButton = ({ advanceAction, advanceText }) => {
 };
 
 const helpContainer = { paddingLeft: 7 };
+const titleLine = { flexDirection: 'row', alignItems: 'center' };
 
 const HeaderTitleLine = ({ title, helpAction }) => {
   if (!title) return null;
 
   return (
-    <H2 color={'white'}>
-      {title}
+    <View style={titleLine}>
+      <H2 color={'white'}>{title}</H2>
       {helpAction && (
         <TouchableOpacity onPress={helpAction} style={helpContainer}>
           <Icon name={'help'} color="white" />
         </TouchableOpacity>
       )}
-    </H2>
+    </View>
   );
 };
 
@@ -112,10 +113,15 @@ export class Header extends Component {
       title,
       subtitle,
       helpAction,
+      imageStyle,
     } = this.props;
     return (
       <View>
-        <ImageBackground source={image} style={this.imageStyle()}>
+        <ImageBackground
+          source={image}
+          style={this.imageStyle()}
+          imageStyle={imageStyle}
+        >
           <View style={this.headerStyle()}>
             <ContentComponent component={contentComponent} />
             <HeaderTitles {...{ title, subtitle, helpAction }} />

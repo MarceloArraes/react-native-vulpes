@@ -10,8 +10,14 @@ export class TextInput extends Component {
     this.state = {
       placeholder: !props.value || props.value.length === 0,
       focused: false,
+      loading: true,
     };
     this.field = null;
+  }
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ loading: false });
+    }, 10);
   }
 
   focus() {
@@ -24,7 +30,7 @@ export class TextInput extends Component {
 
   handleChange(text) {
     this.setState({
-      placeholder: text.length === 0,
+      placeholder: !text || text.length === 0,
     });
     this.props.onChangeText && this.props.onChangeText(text);
   }
@@ -56,21 +62,21 @@ export class TextInput extends Component {
       inputStyle,
       onPress,
       onBlur,
-      ref,
       onFocus,
       value,
       ...rest
     } = this.props;
+    if (this.state.loading) return null;
     return (
       <View style={style} {...this.handlePointer()}>
         <Regular style={labelStyle}>{label}</Regular>
         <Input
-          ref={this.handleReference.bind(this)}
           placeholder={placeholder}
           placeholderTextColor={this.fontStyle().color}
           onFocus={this.handleFocus.bind(this)}
           onBlur={this.handleBlur.bind(this)}
           {...rest}
+          ref={this.handleReference.bind(this)}
           style={this.completeStyle()}
           value={this.props.value}
           onChangeText={this.handleChange.bind(this)}
@@ -115,6 +121,7 @@ export class TextInput extends Component {
     let font = Fonts.regularBold;
     if (this.state.placeholder && !this.props.value)
       font = Fonts.placeholderBold;
+    if (this.props.editable === false) font = { ...font, color: Colors.gray };
     if (this.props.error) font = { ...font, color: Colors.error };
     return font;
   }
