@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button } from 'react-native-vulpes';
 import {
@@ -26,10 +26,8 @@ const rowsFromData = ({ data, ...rest }) => {
   const aData = [data].flat();
 
   if (aData.length === 0) return null;
-
   return aData.map((rd, i) => {
     const ad = parseData(rd);
-
     return <Row key={'r' + i} {...rest} data={ad} />;
   });
 };
@@ -96,38 +94,101 @@ const Pagination = ({ onChangePage, data }) => {
   );
 };
 
-export const Table = ({ style, ...props }) => {
-  const cItens = [
-    rowsFromData(props),
-    React.Children.toArray(props.children),
-  ].flat();
+export class Table extends Component {
+  constructor(props) {
+    super(props);
 
-  const itemCount = cItens.length;
+    this.propsCWidth = { ...props.columnWidth } || {};
 
-  const contStyle = { flexGrow: 1 };
-  return (
-    <ScrollView
-      horizontal={true}
-      disableScrollViewPanResponder={true}
-      contentContainerStyle={contStyle}
-    >
-      <View style={[listContainer, style]}>
+    this.state = {
+      tableWidth: null,
+      columnWidth: { ...props.columnWidth } || {},
+    };
+    this.cWidth = this.state.columnWidth;
+    this.delta = 8;
+  }
+
+  onCellLayout({ nativeEvent }, index, lastCellRender) {
+    const { width } = nativeEvent.layout;
+    const minWidth = 50;
+    if (this.propsCWidth[index] !== undefined) return;
+
+    this.nCols = Math.max(this.nCols, index);
+    const cellWidth = Math.round(width) + this.delta;
+    let nVal = Math.max(this.cWidth[index] || 0, cellWidth, minWidth);
+
+    this.cWidth[index] = nVal;
+    if (lastCellRender) {
+      const aWidth = Object.values(this.cWidth);
+      const nCols = aWidth.length;
+      const sNCols = aWidth.reduce((s, a) => s + a, 0);
+      if (sNCols < this.tableWidth) {
+        for (let i = 0; i < nCols; i++) {
+          const nWidth = Math.round((this.tableWidth * aWidth[i]) / sNCols) - 1;
+          this.cWidth[i] = Math.round(nWidth);
+        }
+      }
+
+      this.delta = 0;
+      this.setState({ columnWidth: this.cWidth });
+    }
+  }
+
+  onTableLayout({ nativeEvent }) {
+    const { width } = nativeEvent.layout;
+    this.tableWidth = width;
+  }
+
+  render() {
+    let { style } = this;
+    const props = { ...this.props };
+
+    props.onCellLayout = this.onCellLayout.bind(this);
+    props.columnWidth = this.state.columnWidth;
+
+    const cItens = [
+      rowsFromData({ ...props }),
+      React.Children.toArray(props.children),
+    ].flat();
+
+    const itemCount = cItens.length;
+    this.nTableRows = cItens.length;
+
+    const contScrollStyle = {
+      flexGrow: 1,
+      minWidth: '100%',
+    };
+    const contStyle = { flex: 1 };
+
+    return (
+      <View style={contStyle}>
         <Title title={props.title} />
-        <EmptyState {...props} />
-        <Header {...props} />
-        {cItens.map((child, i) => {
-          const last = i === itemCount - 1;
-          if (!child) return child;
-          return React.cloneElement(child, {
-            last: last,
-            key: 'c' + i,
-          });
-        })}
+        <ScrollView
+          horizontal={true}
+          disableScrollViewPanResponder={true}
+          contentContainerStyle={contScrollStyle}
+        >
+          <View
+            onLayout={this.onTableLayout.bind(this)}
+            style={{ ...listContainer, ...style }}
+          >
+            <EmptyState {...props} />
+            <Header {...props} />
+            {cItens.map((child, i) => {
+              const last = i === itemCount - 1;
+              if (!child) return child;
+              return React.cloneElement(child, {
+                last: last,
+                key: 'c' + i,
+              });
+            })}
+          </View>
+        </ScrollView>
         <Pagination {...props} />
       </View>
-    </ScrollView>
-  );
-};
+    );
+  }
+}
 
 function listProps(props) {
   const style = { ...listItem, ...props.style };
@@ -146,19 +207,26 @@ export const Row = (props) => {
   const params = listProps(props);
 
   const data = [React.Children.toArray(props.children), props.data].flat();
-
   const columnWidth = props.columnWidth || {};
+  const nCellI = data.length - 1;
 
   const cells = data.map((c, i) => {
     const width = columnWidth[i] || null;
+
     return (
-      <Cell key={'c' + i} {...props} width={width}>
+      <Cell
+        key={'c' + i}
+        index={i}
+        lastCell={i === nCellI}
+        {...props}
+        width={width}
+      >
         {c}
       </Cell>
     );
   });
 
-  return <View style={{ ...params.style }}>{cells}</View>;
+  return <View style={{ ...params.style, ...{ flex: 1 } }}>{cells}</View>;
 };
 
 const CellContent = (props) => {
@@ -174,12 +242,18 @@ const CellContent = (props) => {
 };
 
 const Cell = (props) => {
-  const { width } = props;
-  const widthStyle = width ? { width: width, flex: undefined } : {};
+  const { width, index, last, lastCell } = props;
+  const widthStyle = width ? { width: width } : {};
 
+  const ss = { minWidth: 2 };
   return (
-    <View style={{ ...cellStyle, ...props.cellStyle, ...widthStyle }}>
-      <CellContent {...props} />
+    <View
+      style={{ ...cellStyle, ...props.cellStyle, ...widthStyle }}
+      onLayout={(e) => props.onCellLayout(e, index, last && lastCell)}
+    >
+      <View style={ss}>
+        <CellContent {...props} />
+      </View>
     </View>
   );
 };

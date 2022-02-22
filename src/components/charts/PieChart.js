@@ -87,7 +87,9 @@ export class PieChart extends Component {
   }
 
   dataFormatter(data) {
+    if(!data|| !data.data || !data.data.length===0) return []
     let pieData = data.data.filter((d, i) => d.value > 0);
+    if(pieData.length===0) return []
 
     let total = pieData
       .map((item) => item.value)
@@ -105,8 +107,6 @@ export class PieChart extends Component {
 
     return pieData;
   }
-
-  renderGraph(data) {}
 
   render() {
     const { data } = this.props;
