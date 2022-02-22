@@ -115,7 +115,6 @@ export class Table extends Component {
     const minWidth = 50;
     if (this.propsCWidth[index] !== undefined) return;
 
-    this.nCols = Math.max(this.nCols, index);
     const cellWidth = Math.round(width) + this.delta;
     let nVal = Math.max(this.cWidth[index] || 0, cellWidth, minWidth);
 
@@ -124,9 +123,12 @@ export class Table extends Component {
       const aWidth = Object.values(this.cWidth);
       const nCols = aWidth.length;
       const sNCols = aWidth.reduce((s, a) => s + a, 0);
-      if (sNCols < this.tableWidth) {
+      console.log('REFRESHING...');
+      console.log(sNCols, this.tableWidth);
+
+      if (sNCols - this.tableWidth < -2) {
         for (let i = 0; i < nCols; i++) {
-          const nWidth = Math.round((this.tableWidth * aWidth[i]) / sNCols) - 1;
+          const nWidth = Math.round((this.tableWidth * aWidth[i]) / sNCols);
           this.cWidth[i] = Math.round(nWidth);
         }
       }
@@ -142,7 +144,7 @@ export class Table extends Component {
   }
 
   render() {
-    let { style, ...props } = this.props;
+    let { style, containerStyle, ...props } = this.props;
 
     props.onCellLayout = this.onCellLayout.bind(this);
     props.columnWidth = this.state.columnWidth;
@@ -159,10 +161,9 @@ export class Table extends Component {
       flexGrow: 1,
       minWidth: '100%',
     };
-    const contStyle = { flex: 1 };
 
     return (
-      <View style={contStyle}>
+      <View style={containerStyle}>
         <Title title={props.title} />
         <ScrollView
           horizontal={true}
@@ -227,7 +228,7 @@ export const Row = (props) => {
     );
   });
 
-  return <View style={{ ...params.style, ...{ flex: 1 } }}>{cells}</View>;
+  return <View style={params.style}>{cells}</View>;
 };
 
 const CellContent = (props) => {
