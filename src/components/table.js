@@ -61,7 +61,7 @@ const EmptyState = ({ emptyState, data }) => {
   return emptyState;
 };
 
-const Pagination = ({ onChangePage, data }) => {
+const Pagination = ({ onChangePage, data, pageSize }) => {
   const [currentPage, setPage] = useState(0);
 
   if (!onChangePage) return null;
@@ -83,6 +83,8 @@ const Pagination = ({ onChangePage, data }) => {
     alignItems: 'center',
   };
   const sb = { marginLeft: 5, marginRight: 5 };
+
+  if (pageSize && currentPage === 0 && data.length < pageSize) return null;
 
   return (
     <View style={sm}>
@@ -140,8 +142,7 @@ export class Table extends Component {
   }
 
   render() {
-    let { style } = this;
-    const props = { ...this.props };
+    let { style, ...props } = this.props;
 
     props.onCellLayout = this.onCellLayout.bind(this);
     props.columnWidth = this.state.columnWidth;
