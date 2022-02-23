@@ -15,6 +15,7 @@ export class StackChart extends Component {
     if (data && data.data && data.data.length > 0) {
       this.nItems = data.data.length;
     }
+    this.maxCaptionLayout = 10;
   }
 
   topLabel(value) {
@@ -30,6 +31,9 @@ export class StackChart extends Component {
 
   onCaptionLayout({ nativeEvent }) {
     const { height } = nativeEvent.layout;
+    this.maxCaptionLayout -= 1;
+    if (this.maxCaptionLayout < 0) return;
+    if (Math.abs(height - this.state.captionHeight) < 3) return;
     this.setState({ captionHeight: height });
   }
 

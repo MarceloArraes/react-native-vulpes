@@ -123,8 +123,7 @@ export class Table extends Component {
       const aWidth = Object.values(this.cWidth);
       const nCols = aWidth.length;
       const sNCols = aWidth.reduce((s, a) => s + a, 0);
-      console.log('REFRESHING...');
-      console.log(sNCols, this.tableWidth);
+      console.log('REFRESHING...', sNCols, this.tableWidth);
 
       if (sNCols - this.tableWidth < -2) {
         for (let i = 0; i < nCols; i++) {

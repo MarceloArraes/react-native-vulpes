@@ -24,7 +24,7 @@ export const listItem = {
 
 export const titleStyle = {
   marginTop: 16,
-  marginBottom: 16,
+  marginBottom: 8,
 };
 export const cellStyle = {
   // flex: 1,

@@ -27,7 +27,7 @@ export const StackChart = (props) => (
 
 const containerStyle = {
   width: 'auto',
-  minWidth: 300,
+  minWidth: 350,
   flex: 1,
   marginBottom: 16,
   marginLeft: 8,
