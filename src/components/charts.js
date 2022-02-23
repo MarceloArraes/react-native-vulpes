@@ -3,6 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import { Card } from './card';
 import { BarChart as BChart } from './charts/BarChart';
 import { PieChart as PChart } from './charts/PieChart';
+import { StackChart as SChart } from './charts/StackChart';
 import { Icon } from './icon';
 import { Modal } from './modal';
 import { ModalContainer } from './modal_container';
@@ -16,6 +17,11 @@ export const BarChart = (props) => (
 export const PieChart = (props) => (
   <CardChart {...props}>
     <PChart />
+  </CardChart>
+);
+export const StackChart = (props) => (
+  <CardChart {...props}>
+    <SChart />
   </CardChart>
 );
 
@@ -34,7 +40,6 @@ const bodyStyle = {
   flex: 1,
   height: 200,
   overflow: 'hidden',
-  paddingBottom: 16,
   alignItems: 'center',
   flexDirection: 'row',
 };

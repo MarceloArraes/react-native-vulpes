@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { BarChart as BChart } from 'react-native-gifted-charts';
 import { Colors } from '../../colors';
 import { Small } from './../typos';
@@ -42,24 +43,26 @@ export class BarChart extends Component {
       d.onPress = () => console.log(d.value);
       d.labelTextStyle = this.xLabelStyle();
     }
-
+    const sGraph = { flex: 1, paddingBottom: 16 };
     return (
-      <BChart
-        data={data.data}
-        width={this.props.width - 35}
-        barWidth={this.barWidth}
-        spacing={this.spacing}
-        initialSpacing={12}
-        noOfSections={4}
-        showYAxisIndices
-        isAnimated
-        cappedBars
-        capThickness={1}
-        capColor={Colors.dark_gray}
-        showGradient
-        gradientColor={Colors.dark_cyan}
-        frontColor={Colors.light_cyan}
-      />
+      <View style={sGraph}>
+        <BChart
+          data={data.data}
+          width={this.props.width - 35}
+          barWidth={this.barWidth}
+          spacing={this.spacing}
+          initialSpacing={12}
+          noOfSections={4}
+          showYAxisIndices
+          isAnimated
+          cappedBars
+          capThickness={1}
+          capColor={Colors.dark_gray}
+          showGradient
+          gradientColor={Colors.dark_cyan}
+          frontColor={Colors.light_cyan}
+        />
+      </View>
     );
   }
 
