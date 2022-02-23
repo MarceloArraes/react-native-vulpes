@@ -15,7 +15,7 @@ export class StackChart extends Component {
     if (data && data.data && data.data.length > 0) {
       this.nItems = data.data.length;
     }
-    this.maxCaptionLayout = 10;
+    this.maxCaptionLayout = 5;
   }
 
   topLabel(value) {
